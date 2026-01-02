@@ -148,7 +148,7 @@ const AuthPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 px-4 py-6 sm:py-8 flex flex-col">
-            <div className="flex-grow w-full max-w-md mx-auto animate-fade-in flex items-center">
+            <div className="flex-grow w-full max-w-md mx-auto animate-fade-in flex items-center mb-8">
                 <Card className="w-full p-6 sm:p-8 bg-white border border-gray-200 shadow-sm animate-scale-in">
                     <div className="text-center mb-8 animate-fade-in-up">
                         <Logo className="justify-center" />
