@@ -7,6 +7,7 @@ import Navbar from '../../../components/Navbar';
 import Sidebar from '../../../components/Sidebar';
 import UserComplaintSection from '../components/UserComplaintSection';
 import AdminStats from '../components/AdminStats';
+import Footer from '../../../components/Footer';
 import { MagnifyingGlassIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 
 const AdminDashboard = () => {
@@ -78,10 +79,10 @@ const AdminDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 transition-colors duration-200">
+        <div className="min-h-screen bg-gray-50 transition-colors duration-200 flex flex-col">
             <Navbar />
 
-            <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+            <main className="flex-grow mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Sidebar */}
                     <div className="animate-slide-in-left">
@@ -162,6 +163,8 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             </main>
+
+            <Footer />
         </div>
     );
 };

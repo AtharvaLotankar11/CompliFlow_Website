@@ -7,6 +7,7 @@ import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import Card from '../../../components/Card';
 import Logo from '../../../components/Logo';
+import Footer from '../../../components/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AuthPage = () => {
@@ -146,9 +147,9 @@ const AuthPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 px-4 py-6 sm:py-8">
-            <div className="w-full max-w-md mx-auto animate-fade-in">
-                <Card className="p-6 sm:p-8 bg-white border border-gray-200 shadow-sm animate-scale-in">
+        <div className="min-h-screen bg-gray-50 px-4 py-6 sm:py-8 flex flex-col">
+            <div className="flex-grow w-full max-w-md mx-auto animate-fade-in flex items-center">
+                <Card className="w-full p-6 sm:p-8 bg-white border border-gray-200 shadow-sm animate-scale-in">
                     <div className="text-center mb-8 animate-fade-in-up">
                         <Logo className="justify-center" />
                     </div>
@@ -389,6 +390,8 @@ const AuthPage = () => {
                     </AnimatePresence>
                 </Card>
             </div>
+            
+            <Footer />
         </div>
     );
 };

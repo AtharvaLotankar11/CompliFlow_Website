@@ -10,6 +10,7 @@ import IssueCard from '../components/IssueCard';
 import IssueForm from '../components/IssueForm';
 import Modal from '../../../components/Modal';
 import Button from '../../../components/Button';
+import Footer from '../../../components/Footer';
 import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const DashboardPage = () => {
@@ -82,10 +83,10 @@ const DashboardPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 transition-colors duration-200">
+        <div className="min-h-screen bg-gray-50 transition-colors duration-200 flex flex-col">
             <Navbar />
 
-            <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+            <main className="flex-grow mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Sidebar */}
                     <div className="animate-slide-in-left">
@@ -166,6 +167,8 @@ const DashboardPage = () => {
                     isLoading={createMutation.isLoading || updateMutation.isLoading}
                 />
             </Modal>
+
+            <Footer />
         </div>
     );
 };
