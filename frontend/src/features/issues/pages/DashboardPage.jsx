@@ -11,6 +11,7 @@ import IssueForm from '../components/IssueForm';
 import Modal from '../../../components/Modal';
 import Button from '../../../components/Button';
 import Footer from '../../../components/Footer';
+import AIHelper from '../../../components/AIHelper';
 import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const DashboardPage = () => {
@@ -83,7 +84,7 @@ const DashboardPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 transition-colors duration-200 flex flex-col">
+        <div className="min-h-screen bg-primary-light flex flex-col">
             <Navbar />
 
             <main className="flex-grow mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
@@ -96,21 +97,21 @@ const DashboardPage = () => {
                     {/* Content */}
                     <div className="flex-1 animate-slide-in-right">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                            <div className="relative flex-1 max-w-md">
-                                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 transition-colors duration-200" />
+                            <div className="relative flex-1 max-w-md group">
+                                <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-accent transition-colors duration-300" />
                                 <input
                                     type="text"
                                     placeholder="Search issues..."
-                                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all duration-200 hover:border-gray-300 focus:scale-105"
+                                    className="input-premium pl-12"
                                     value={filters.search}
                                     onChange={(e) => handleFilterChange('search', e.target.value)}
                                 />
                             </div>
-                            <Button 
-                                onClick={() => { setEditingIssue(null); setIsModalOpen(true); }} 
-                                className="flex items-center gap-2 transform hover:scale-105 transition-all duration-200 hover:shadow-lg"
+                            <Button
+                                onClick={() => { setEditingIssue(null); setIsModalOpen(true); }}
+                                className="btn-primary"
                             >
-                                <PlusIcon className="h-5 w-5 transition-transform duration-200 group-hover:rotate-90" />
+                                <PlusIcon className="h-5 w-5" />
                                 {user?.role === 'admin' ? 'New Issue (Admin)' : 'New Complaint'}
                             </Button>
                         </div>
@@ -124,8 +125,8 @@ const DashboardPage = () => {
                         ) : issues?.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {issues.map((issue, index) => (
-                                    <div 
-                                        key={issue._id} 
+                                    <div
+                                        key={issue._id}
                                         className="animate-fade-in-up"
                                         style={{ animationDelay: `${index * 100}ms` }}
                                     >
@@ -142,9 +143,9 @@ const DashboardPage = () => {
                         ) : (
                             <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300 animate-fade-in">
                                 <p className="text-gray-500">No issues found matching your filters.</p>
-                                <Button 
-                                    variant="ghost" 
-                                    className="mt-4 hover:scale-105 transition-transform duration-200" 
+                                <Button
+                                    variant="ghost"
+                                    className="mt-4 hover:scale-105 transition-transform duration-200"
                                     onClick={() => setFilters({ status: '', priority: '', search: '' })}
                                 >
                                     Clear all filters
@@ -169,6 +170,7 @@ const DashboardPage = () => {
             </Modal>
 
             <Footer />
+            <AIHelper />
         </div>
     );
 };

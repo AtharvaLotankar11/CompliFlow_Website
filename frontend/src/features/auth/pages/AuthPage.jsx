@@ -147,23 +147,31 @@ const AuthPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 px-4 py-6 sm:py-8 flex flex-col">
-            <div className="flex-grow w-full max-w-md mx-auto animate-fade-in flex items-center mb-8">
-                <Card className="w-full p-6 sm:p-8 bg-white border border-gray-200 shadow-sm animate-scale-in">
-                    <div className="text-center mb-8 animate-fade-in-up">
+        <div className="min-h-screen bg-primary-light px-4 py-8 flex flex-col items-center justify-center relative overflow-hidden">
+            {/* Background blobs */}
+            <div className="absolute top-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+
+            <div className="w-full max-w-md relative z-10 animate-fade-in">
+                <div className="card-premium !pt-[0.1rem] animate-scale-in">
+                    <div className="text-center mb-[0.1rem] animate-fade-in-up">
                         <Logo className="justify-center" />
                     </div>
 
+
+
+
+
                     <div className="flex border-b border-gray-200 mb-6">
                         <button
-                            className={`flex-1 pb-3 text-sm font-medium transition-all duration-200 ${activeTab === 'login' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'
+                            className={`flex-1 pb-3 text-sm font-heading font-semibold transition-all duration-300 ${activeTab === 'login' ? 'text-accent border-b-2 border-accent' : 'text-slate-400 hover:text-slate-600'
                                 }`}
                             onClick={() => setActiveTab('login')}
                         >
                             Sign In
                         </button>
                         <button
-                            className={`flex-1 pb-3 text-sm font-medium transition-all duration-200 ${activeTab === 'register' ? 'text-blue-600 border-b-2 border-blue-600 dark:text-blue-400 dark:border-blue-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                            className={`flex-1 pb-3 text-sm font-heading font-semibold transition-all duration-300 ${activeTab === 'register' ? 'text-accent border-b-2 border-accent' : 'text-slate-400 hover:text-slate-600'
                                 }`}
                             onClick={() => setActiveTab('register')}
                         >
@@ -208,7 +216,7 @@ const AuthPage = () => {
                                             Forgot password?
                                         </button>
                                     </div>
-                                    <Button type="submit" className="w-full transform hover:scale-105 transition-all duration-200" disabled={isLoading}>
+                                    <Button type="submit" className="btn-primary w-full" disabled={isLoading}>
                                         {isLoading ? 'Signing in...' : 'Sign In'}
                                     </Button>
                                 </form>
@@ -242,7 +250,7 @@ const AuthPage = () => {
                                             name="role"
                                             value={formData.role || 'user'}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100"
+                                            className="input-premium appearance-none"
                                         >
                                             <option value="user">User</option>
                                             <option value="admin">Admin</option>
@@ -266,7 +274,7 @@ const AuthPage = () => {
                                         required
                                         placeholder="••••••••"
                                     />
-                                    <Button type="submit" className="w-full transform hover:scale-105 transition-all duration-200" disabled={isLoading}>
+                                    <Button type="submit" className="btn-primary w-full" disabled={isLoading}>
                                         {isLoading ? 'Creating account...' : 'Create Account'}
                                     </Button>
                                 </form>
@@ -286,7 +294,7 @@ const AuthPage = () => {
                                         required
                                         placeholder="name@company.com"
                                     />
-                                    <Button type="submit" className="w-full transform hover:scale-105 transition-all duration-200" disabled={isLoading}>
+                                    <Button type="submit" className="btn-primary w-full" disabled={isLoading}>
                                         {isLoading ? 'Sending OTP...' : 'Send OTP'}
                                     </Button>
                                     <button
@@ -323,7 +331,7 @@ const AuthPage = () => {
                                         maxLength="6"
                                         className="text-center text-2xl tracking-widest"
                                     />
-                                    <Button type="submit" className="w-full transform hover:scale-105 transition-all duration-200" disabled={isLoading}>
+                                    <Button type="submit" className="btn-primary w-full" disabled={isLoading}>
                                         {isLoading ? 'Verifying...' : 'Verify OTP'}
                                     </Button>
                                     <div className="flex justify-between text-sm">
@@ -374,7 +382,7 @@ const AuthPage = () => {
                                         required
                                         placeholder="••••••••"
                                     />
-                                    <Button type="submit" className="w-full transform hover:scale-105 transition-all duration-200" disabled={isLoading}>
+                                    <Button type="submit" className="btn-primary w-full" disabled={isLoading}>
                                         {isLoading ? 'Resetting Password...' : 'Reset Password'}
                                     </Button>
                                     <button
@@ -388,9 +396,9 @@ const AuthPage = () => {
                             )}
                         </motion.div>
                     </AnimatePresence>
-                </Card>
+                </div>
             </div>
-            
+
             <Footer />
         </div>
     );

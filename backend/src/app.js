@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const issueRoutes = require('./routes/issues');
+const aiRoutes = require('./routes/ai');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 const { apiLimiter } = require('./middleware/rateLimiter');
 
@@ -23,7 +24,7 @@ app.use('/api/', apiLimiter);
 
 // CORS configuration
 const corsOptions = {
-    origin: process.env.NODE_ENV === 'production' 
+    origin: process.env.NODE_ENV === 'production'
         ? ['https://yourdomain.com'] // Replace with your production domain
         : ['http://localhost:3000', 'http://localhost:5173'], // Vite default port
     credentials: true,
@@ -38,6 +39,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/issues', issueRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Root route
 app.get('/', (req, res) => {

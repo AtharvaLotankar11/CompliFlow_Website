@@ -4,10 +4,14 @@ import Input from '../../../components/Input';
 import Select from '../../../components/Select';
 import { ISSUE_CATEGORY, ISSUE_PRIORITY, ISSUE_STATUS } from '../../../constants/issue';
 import { useAuth } from '../../../hooks/useAuth';
+import { Sparkles, Loader2 } from 'lucide-react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const IssueForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
     const { user } = useAuth();
     const isAdmin = user?.role === 'admin';
+    const [isAiLoading, setIsAiLoading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -26,17 +30,40 @@ const IssueForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleAiSuggest = async () => {
+        if (!formData.title) {
+            toast.error('Please enter a title first');
+            return;
+        }
+
+        setIsAiLoading(true);
+        try {
+            const response = await axios.post('/api/ai/chat', {
+                message: `Based on this issue title: "${formData.title}", please suggest a detailed description and the most appropriate category (one of: ${Object.values(ISSUE_CATEGORY).join(', ')}). Format your response as JSON: {"description": "...", "category": "..."}`,
+                history: []
+            }, { withCredentials: true });
+
+            const aiData = JSON.parse(response.data.response);
+            setFormData(prev => ({
+                ...prev,
+                description: aiData.description || prev.description,
+                category: aiData.category || prev.category
+            }));
+            toast.success('AI suggestions applied!');
+        } catch (error) {
+            console.error('AI Suggestion Error:', error);
+            toast.error('Failed to get AI suggestions');
+        } finally {
+            setIsAiLoading(false);
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        
-        // Create a copy of formData
         const submitData = { ...formData };
-        
-        // Remove status field for non-admin users when editing
         if (initialData && !isAdmin) {
             delete submitData.status;
         }
-        
         onSubmit(submitData);
     };
 
@@ -56,17 +83,30 @@ const IssueForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
     }));
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-                label="Title"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                required
-                placeholder="Brief summary of the issue"
-            />
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="relative">
+                <Input
+                    label="Title"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    required
+                    placeholder="Brief summary of the issue"
+                    className="pr-12"
+                />
+                <button
+                    type="button"
+                    onClick={handleAiSuggest}
+                    disabled={isAiLoading}
+                    className="absolute right-3 top-[38px] p-2 text-accent hover:text-accent-dark transition-colors disabled:opacity-50"
+                    title="Get AI Suggestions"
+                >
+                    {isAiLoading ? <Loader2 className="animate-spin" size={20} /> : <Sparkles size={20} />}
+                </button>
+            </div>
+
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                     Description
                 </label>
                 <textarea
@@ -75,11 +115,12 @@ const IssueForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
                     onChange={handleChange}
                     required
                     rows={4}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-white/50 backdrop-blur-sm text-slate-900 focus:outline-none focus:ring-4 focus:ring-accent/10 transition-all dark:bg-slate-950/50 dark:border-slate-800 dark:text-white"
                     placeholder="Detailed explanation..."
                 />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <Select
                     label="Category"
                     name="category"
@@ -95,7 +136,7 @@ const IssueForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
                     options={priorityOptions}
                 />
             </div>
-            {/* Status field - Only show to admins when editing */}
+
             {initialData && isAdmin && (
                 <Select
                     label="Status (Admin Only)"
@@ -105,22 +146,20 @@ const IssueForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
                     options={statusOptions}
                 />
             )}
-            {/* Show current status to non-admin users (read-only) */}
+
             {initialData && !isAdmin && (
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Current Status (Admin Only)
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        Current Status
                     </label>
-                    <div className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-600">
-                        {formData.status?.replace('_', ' ').charAt(0).toUpperCase() + 
-                         formData.status?.slice(1).replace('_', ' ') || 'Open'}
+                    <div className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                        {formData.status?.replace('_', ' ').charAt(0).toUpperCase() +
+                            formData.status?.slice(1).replace('_', ' ') || 'Open'}
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                        Only administrators can change issue status
-                    </p>
                 </div>
             )}
-            <div className="flex justify-end gap-3 mt-6">
+
+            <div className="flex justify-end gap-3 pt-4">
                 <Button type="button" variant="secondary" onClick={onCancel}>
                     Cancel
                 </Button>
@@ -133,3 +172,4 @@ const IssueForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
 };
 
 export default IssueForm;
+
