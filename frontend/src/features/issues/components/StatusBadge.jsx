@@ -12,7 +12,7 @@ const StatusBadge = ({ status }) => {
 
     return (
         <Badge color={colorMap[status] || 'gray'}>
-            {status.replace('_', ' ').charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
+            {status ? (status.replace('_', ' ').charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')) : 'Unknown'}
         </Badge>
     );
 };

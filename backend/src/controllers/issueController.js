@@ -1,22 +1,64 @@
 const Issue = require('../models/Issue');
+const Activity = require('../models/Activity');
+const Groq = require('groq-sdk');
 
 // @desc    Create a new issue
 // @route   POST /api/issues
 // @access  Private
 const createIssue = async (req, res) => {
-    const { title, description, category, priority } = req.body;
+    try {
+        const { title, description, category, priority } = req.body;
 
-    const issue = await Issue.create({
-        title,
-        description,
-        category,
-        priority,
-        createdBy: req.user._id,
-    });
+        // AI Triage Integration
+        let aiTriage = null;
+        if (process.env.GROQ_API_KEY) {
+            try {
+                const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+                const prompt = `Analyze this complaint:
+                Title: ${title}
+                Description: ${description}
+                
+                Provide a JSON response with:
+                1. sentiment: (e.g., Frustrated, Urgent, Neutral, Satisfied)
+                2. suggestedPriority: (low, medium, high, critical)
+                3. suggestedCategory: (bug, facility, request, other)
+                4. explanation: a short 1-sentence reason for your triage
+                5. tags: 3-5 relevant keywords
+                
+                Return ONLY valid JSON.`;
 
-    if (issue) {
+                const completion = await groq.chat.completions.create({
+                    messages: [{ role: 'user', content: prompt }],
+                    model: 'llama-3.1-8b-instant', // Faster model for triage
+                    response_format: { type: 'json_object' }
+                });
+
+                aiTriage = JSON.parse(completion.choices[0].message.content);
+            } catch (aiError) {
+                console.error('AI Triage failed:', aiError);
+            }
+        }
+
+        const issue = await Issue.create({
+            title,
+            description,
+            category,
+            priority,
+            createdBy: req.user._id,
+            aiTriage
+        });
+
+        // Log Activity
+        await Activity.create({
+            issue: issue._id,
+            user: req.user._id,
+            action: 'created',
+            details: { message: `Issue created with priority ${priority}` }
+        });
+
         res.status(201).json(issue);
-    } else {
+    } catch (error) {
+        console.error('Create Issue Error:', error);
         res.status(400).json({ message: 'Invalid issue data' });
     }
 };
@@ -27,7 +69,7 @@ const createIssue = async (req, res) => {
 const getIssues = async (req, res) => {
     try {
         const { status, priority, search, page = 1, limit = 10 } = req.query;
-        const query = { 
+        const query = {
             isDeleted: false,
             createdBy: req.user._id  // Only show issues created by current user
         };
@@ -86,20 +128,23 @@ const updateIssue = async (req, res) => {
         // Issue is already attached by authorization middleware
         const issue = req.issue;
 
+        const oldStatus = issue.status;
+        const oldPriority = issue.priority;
+
         // Only allow status updates for non-owners (admins)
         if (req.user._id.toString() !== issue.createdBy.toString()) {
             // Non-owner (admin) can only update status
             if (req.body.title || req.body.description || req.body.category || req.body.priority) {
-                return res.status(403).json({ 
-                    message: 'Admins can only update issue status, not content' 
+                return res.status(403).json({
+                    message: 'Admins can only update issue status, not content'
                 });
             }
             issue.status = req.body.status || issue.status;
         } else {
             // Owner can update everything except status (unless admin)
             if (req.user.role !== 'admin' && req.body.status) {
-                return res.status(403).json({ 
-                    message: 'Users cannot update issue status' 
+                return res.status(403).json({
+                    message: 'Users cannot update issue status'
                 });
             }
             issue.title = req.body.title || issue.title;
@@ -112,6 +157,27 @@ const updateIssue = async (req, res) => {
         }
 
         const updatedIssue = await issue.save();
+
+        // Log Activity for status change
+        if (oldStatus !== updatedIssue.status) {
+            await Activity.create({
+                issue: updatedIssue._id,
+                user: req.user._id,
+                action: 'status_updated',
+                details: { from: oldStatus, to: updatedIssue.status }
+            });
+        }
+
+        // Log Activity for priority change
+        if (oldPriority !== updatedIssue.priority) {
+            await Activity.create({
+                issue: updatedIssue._id,
+                user: req.user._id,
+                action: 'priority_updated',
+                details: { from: oldPriority, to: updatedIssue.priority }
+            });
+        }
+
         res.json(updatedIssue);
     } catch (error) {
         res.status(500).json({ message: 'Server error while updating issue' });
@@ -125,9 +191,16 @@ const deleteIssue = async (req, res) => {
     try {
         // Issue is already attached by authorization middleware
         const issue = req.issue;
-        
+
         issue.isDeleted = true;
         await issue.save();
+
+        // Log Activity
+        await Activity.create({
+            issue: issue._id,
+            user: req.user._id,
+            action: 'deleted'
+        });
 
         res.json({ message: 'Issue removed (soft deleted)' });
     } catch (error) {
@@ -147,8 +220,8 @@ const getIssueById = async (req, res) => {
 
     // Check if user owns the issue or is admin
     if (issue.createdBy._id.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-        return res.status(403).json({ 
-            message: 'Access denied. You can only view your own issues.' 
+        return res.status(403).json({
+            message: 'Access denied. You can only view your own issues.'
         });
     }
 
@@ -216,6 +289,17 @@ const getIssuesGroupedByUser = async (req, res) => {
     }
 };
 
+const getActivityByIssueId = async (req, res) => {
+    try {
+        const activities = await Activity.find({ issue: req.params.id })
+            .populate('user', 'name role')
+            .sort({ createdAt: -1 });
+        res.json(activities);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error while fetching activity' });
+    }
+};
+
 module.exports = {
     createIssue,
     getIssues,
@@ -223,4 +307,5 @@ module.exports = {
     deleteIssue,
     getIssueById,
     getIssuesGroupedByUser,
+    getActivityByIssueId,
 };

@@ -1,6 +1,6 @@
 import React from 'react';
-import { 
-    UserGroupIcon, 
+import {
+    UserGroupIcon,
     ExclamationTriangleIcon,
     CheckCircleIcon,
     ClockIcon,
@@ -9,11 +9,11 @@ import {
 
 const AdminStats = ({ totalUsers, totalIssues, issuesData }) => {
     const getStatusCount = (status) => {
-        return issuesData.filter(issue => issue.status === status).length;
+        return (issuesData || []).filter(issue => issue.status === status).length;
     };
 
     const getPriorityCount = (priority) => {
-        return issuesData.filter(issue => issue.priority === priority).length;
+        return (issuesData || []).filter(issue => issue.priority === priority).length;
     };
 
     const stats = [

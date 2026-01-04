@@ -7,7 +7,9 @@ import Navbar from '../../../components/Navbar';
 import Sidebar from '../../../components/Sidebar';
 import UserComplaintSection from '../components/UserComplaintSection';
 import AdminStats from '../components/AdminStats';
+import AdminCharts from '../components/AdminCharts';
 import Footer from '../../../components/Footer';
+import AIHelper from '../../../components/AIHelper';
 import { MagnifyingGlassIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 
 const AdminDashboard = () => {
@@ -18,7 +20,7 @@ const AdminDashboard = () => {
     const { data: adminData, isLoading, error } = useQuery(
         ['admin-issues', filters],
         () => getIssuesGroupedByUser(filters),
-        { 
+        {
             keepPreviousData: true,
             onSuccess: (data) => {
                 console.log('Admin dashboard data received:', data);
@@ -118,13 +120,9 @@ const AdminDashboard = () => {
                             </div>
                         </div>
 
-                        {/* Stats */}
+                        {/* Charts */}
                         <div className="animate-scale-in">
-                            <AdminStats 
-                                totalUsers={totalUsers}
-                                totalIssues={totalIssues}
-                                issuesData={allIssues}
-                            />
+                            <AdminCharts issuesData={allIssues} />
                         </div>
 
                         {/* User Complaint Sections */}
@@ -137,7 +135,7 @@ const AdminDashboard = () => {
                         ) : userEntries.length > 0 ? (
                             <div className="space-y-6">
                                 {userEntries.map(([userId, { user: userData, issues }], index) => (
-                                    <div 
+                                    <div
                                         key={userId}
                                         className="animate-fade-in-up"
                                         style={{ animationDelay: `${index * 150}ms` }}
@@ -165,6 +163,7 @@ const AdminDashboard = () => {
             </main>
 
             <Footer />
+            <AIHelper />
         </div>
     );
 };

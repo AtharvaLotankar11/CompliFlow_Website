@@ -38,6 +38,19 @@ const issueSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
+        aiTriage: {
+            sentiment: String,
+            suggestedPriority: {
+                type: String,
+                enum: ['low', 'medium', 'high', 'critical']
+            },
+            suggestedCategory: {
+                type: String,
+                enum: ['bug', 'facility', 'request', 'other']
+            },
+            explanation: String,
+            tags: [String]
+        },
     },
     {
         timestamps: true,

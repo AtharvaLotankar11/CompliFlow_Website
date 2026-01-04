@@ -41,7 +41,8 @@ export default {
             },
             backgroundImage: {
                 'premium-gradient': 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
-                'accent-gradient': 'linear_gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                'accent-gradient': 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                'secondary-gradient': 'linear-gradient(135deg, #a855f7 0%, #c084fc 100%)',
                 'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%)',
                 'mesh-gradient': 'radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.1) 0px, transparent 50%), radial-gradient(at 0% 100%, rgba(34, 197, 94, 0.1) 0px, transparent 50%)',
             },

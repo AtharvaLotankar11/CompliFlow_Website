@@ -163,7 +163,7 @@ const IssueForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
                 <Button type="button" variant="secondary" onClick={onCancel}>
                     Cancel
                 </Button>
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading} className="btn-primary">
                     {isLoading ? 'Saving...' : initialData ? 'Update Issue' : 'Create Issue'}
                 </Button>
             </div>

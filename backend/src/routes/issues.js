@@ -6,15 +6,16 @@ const {
     deleteIssue,
     getIssueById,
     getIssuesGroupedByUser,
+    getActivityByIssueId,
 } = require('../controllers/issueController');
 const { protect } = require('../middleware/auth');
 const { requireAdmin } = require('../middleware/roleAuth');
 const { authorizeIssueOwner } = require('../middleware/authorization');
 const { createLimiter } = require('../middleware/rateLimiter');
-const { 
-    validateCreateIssue, 
-    validateUpdateIssue, 
-    handleValidationErrors 
+const {
+    validateCreateIssue,
+    validateUpdateIssue,
+    handleValidationErrors
 } = require('../validators/issueValidator');
 
 const router = express.Router();
@@ -30,5 +31,7 @@ router.route('/:id')
     .get(protect, getIssueById)
     .put(protect, authorizeIssueOwner, validateUpdateIssue, handleValidationErrors, updateIssue)
     .delete(protect, authorizeIssueOwner, deleteIssue);
+
+router.get('/:id/activity', protect, getActivityByIssueId);
 
 module.exports = router;

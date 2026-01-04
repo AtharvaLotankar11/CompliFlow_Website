@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { 
-    UserCircleIcon, 
-    ChevronDownIcon, 
+import {
+    UserCircleIcon,
+    ChevronDownIcon,
     ChevronUpIcon,
     ExclamationTriangleIcon,
     CheckCircleIcon,
@@ -9,6 +9,8 @@ import {
     XCircleIcon
 } from '@heroicons/react/24/outline';
 import StatusBadge from '../../issues/components/StatusBadge';
+import IssueTimeline from '../../issues/components/IssueTimeline';
+import { Sparkles, Tag, Smile } from 'lucide-react';
 import { PRIORITY_COLORS } from '../../../constants/issue';
 
 const UserComplaintSection = ({ user, issues, onStatusUpdate, isUpdating }) => {
@@ -46,7 +48,7 @@ const UserComplaintSection = ({ user, issues, onStatusUpdate, isUpdating }) => {
     return (
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
             {/* User Header */}
-            <div 
+            <div
                 className="p-6 border-b border-gray-200 dark:border-slate-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
                 onClick={() => setIsExpanded(!isExpanded)}
             >
@@ -70,7 +72,7 @@ const UserComplaintSection = ({ user, issues, onStatusUpdate, isUpdating }) => {
                             </p>
                         </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-6">
                         {/* Status Summary */}
                         <div className="hidden md:flex items-center gap-4 text-sm">
@@ -125,7 +127,7 @@ const UserComplaintSection = ({ user, issues, onStatusUpdate, isUpdating }) => {
                 <div className="p-6">
                     <div className="space-y-4">
                         {issues.map((issue) => (
-                            <div 
+                            <div
                                 key={issue._id}
                                 className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors"
                             >
@@ -142,7 +144,7 @@ const UserComplaintSection = ({ user, issues, onStatusUpdate, isUpdating }) => {
                                                 </p>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
                                             <span className="flex items-center gap-1">
                                                 <span className={`font-bold uppercase ${PRIORITY_COLORS[issue.priority]}`}>
@@ -150,7 +152,7 @@ const UserComplaintSection = ({ user, issues, onStatusUpdate, isUpdating }) => {
                                                 </span>
                                             </span>
                                             <span>
-                                                {issue.category.charAt(0).toUpperCase() + issue.category.slice(1)}
+                                                {issue.category ? (issue.category.charAt(0).toUpperCase() + issue.category.slice(1)) : 'Other'}
                                             </span>
                                             <span>
                                                 {new Date(issue.createdAt).toLocaleDateString()}
@@ -172,6 +174,48 @@ const UserComplaintSection = ({ user, issues, onStatusUpdate, isUpdating }) => {
                                             <option value="closed">Closed</option>
                                         </select>
                                     </div>
+                                </div>
+
+                                {/* AI Triage & Timeline Extension */}
+                                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+                                    {issue.aiTriage && (
+                                        <div className="mb-4 bg-indigo-50/50 dark:bg-indigo-900/10 p-3 rounded-lg border border-indigo-100 dark:border-indigo-900/30">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <Sparkles size={14} className="text-indigo-600" />
+                                                <span className="text-xs font-bold text-indigo-900 dark:text-indigo-300 uppercase tracking-wider">AI Insights</span>
+                                            </div>
+                                            <div className="flex flex-wrap gap-4 text-xs">
+                                                <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+                                                    <Smile size={14} className="text-gray-400" />
+                                                    <span className="font-medium">Sentiment:</span>
+                                                    <span className="capitalize">{issue.aiTriage.sentiment}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+                                                    <Tag size={14} className="text-gray-400" />
+                                                    <span className="font-medium">Tags:</span>
+                                                    <div className="flex gap-1">
+                                                        {issue.aiTriage.tags?.map(tag => (
+                                                            <span key={tag} className="bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded border border-gray-200 dark:border-slate-700">{tag}</span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {issue.aiTriage.explanation && (
+                                                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 italic">
+                                                    "{issue.aiTriage.explanation}"
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Collapsible Timeline */}
+                                    <details className="group">
+                                        <summary className="text-xs font-semibold text-gray-500 hover:text-indigo-600 cursor-pointer list-none flex items-center gap-1">
+                                            <span className="group-open:rotate-180 transition-transform">▼</span>
+                                            View Activity History
+                                        </summary>
+                                        <IssueTimeline issueId={issue._id} />
+                                    </details>
                                 </div>
                             </div>
                         ))}

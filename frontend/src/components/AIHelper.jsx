@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, Send, X, MessageSquare, Sparkles, User, Loader2 } from 'lucide-react';
+import { Bot, Send, X, Sparkles, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
@@ -43,14 +43,14 @@ const AIHelper = () => {
     };
 
     return (
-        <div className="fixed bottom-8 right-8 z-50">
+        <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end gap-4">
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 40 }}
-                        className="mb-6 w-80 sm:w-96 glass rounded-3xl overflow-hidden shadow-2xl border border-white/40 flex flex-col h-[600px]"
+                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        className="w-80 sm:w-96 glass rounded-3xl overflow-hidden shadow-2xl border border-white/40 flex flex-col h-[480px]"
                     >
                         {/* Header */}
                         <div className="bg-accent-gradient p-6 text-white flex items-center justify-between">
@@ -59,10 +59,10 @@ const AIHelper = () => {
                                     <Bot size={24} />
                                 </div>
                                 <div>
-                                    <h3 className="font-heading font-bold text-base">CompliFlow AI</h3>
+                                    <h3 className="font-heading font-bold text-base text-white">CompliFlow AI Helper</h3>
                                     <p className="text-xs text-white/80 flex items-center gap-1.5">
                                         <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                                        Intelligent Assistant
+                                        Live Intelligent Assistant
                                     </p>
                                 </div>
                             </div>
@@ -152,14 +152,7 @@ const AIHelper = () => {
                 ) : (
                     <Sparkles size={28} className="text-white relative z-10 animate-pulse" />
                 )}
-                {!isOpen && (
-                    <span className="absolute -top-1 -right-1 flex h-4 w-4">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-4 w-4 bg-white border-2 border-secondary"></span>
-                    </span>
-                )}
             </motion.button>
-
         </div>
     );
 };
