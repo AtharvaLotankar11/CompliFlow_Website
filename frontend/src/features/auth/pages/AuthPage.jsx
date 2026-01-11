@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../../hooks/useAuth';
 import { login, register, forgotPassword, verifyOTP, resetPasswordWithOTP } from '../api/authApi';
@@ -9,6 +9,7 @@ import Card from '../../../components/Card';
 import Logo from '../../../components/Logo';
 import Footer from '../../../components/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Home } from 'lucide-react';
 
 const AuthPage = () => {
     const [activeTab, setActiveTab] = useState('login'); // 'login', 'register', 'forgot', 'otp', 'reset'
@@ -147,17 +148,26 @@ const AuthPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-primary-light px-4 py-8 flex flex-col items-center justify-center relative overflow-hidden">
+        <div className="min-h-screen bg-[#F7FEE7] px-4 py-8 flex flex-col items-center justify-center relative overflow-hidden">
             {/* Background blobs */}
             <div className="absolute top-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
 
             <div className="w-full max-w-md relative z-10 animate-fade-in">
-                <div className="card-premium !pt-[0.1rem] animate-scale-in">
-                    <div className="text-center mb-[0.1rem] animate-fade-in-up">
-                        <Logo className="justify-center" />
-                    </div>
+                <div className="card-premium !pt-[0.1rem] animate-scale-in relative">
+                    <Link
+                        to="/"
+                        className="absolute top-4 left-6 flex items-center gap-2 text-slate-400 hover:text-[#365314] font-bold text-xs transition-all group z-20"
+                    >
+                        <Home size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+                        <span>Home</span>
+                    </Link>
 
+                    <div className="text-center mb-[0.1rem] animate-fade-in-up">
+                        <Link to="/" className="inline-block transform hover:scale-105 transition-all duration-300 active:scale-95">
+                            <Logo className="justify-center" />
+                        </Link>
+                    </div>
 
 
 
@@ -397,6 +407,16 @@ const AuthPage = () => {
                         </motion.div>
                     </AnimatePresence>
                 </div>
+            </div>
+
+            <div className="fixed bottom-8 right-8 z-50">
+                <button
+                    onClick={() => navigate('/')}
+                    className="p-4 bg-[#365314] text-white rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all group"
+                    title="Back to Home"
+                >
+                    <Home size={24} />
+                </button>
             </div>
 
             <Footer />

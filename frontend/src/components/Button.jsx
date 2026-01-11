@@ -10,6 +10,7 @@ const Button = ({ className, variant = 'primary', size = 'md', children, ...prop
         danger: 'bg-red-500 text-white shadow-lg shadow-red-500/30 hover:bg-red-600',
         ghost: 'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800',
         accent: 'bg-secondary-gradient text-white shadow-lg shadow-secondary/30 hover:brightness-110',
+        lime: 'btn-lime',
     };
 
     const sizes = {

@@ -18,7 +18,7 @@ const Sidebar = ({ filters, onFilterChange }) => {
                             <select
                                 value={filters.status}
                                 onChange={(e) => onFilterChange('status', e.target.value)}
-                                className="w-full px-5 py-4 rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 text-sm font-semibold text-slate-700 appearance-none cursor-pointer outline-none focus:ring-4 focus:ring-accent/10 transition-all dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-200"
+                                className="input-premium appearance-none py-3"
                             >
                                 <option value="">All Statuses</option>
                                 {Object.entries(ISSUE_STATUS).map(([key, value]) => (
@@ -41,7 +41,7 @@ const Sidebar = ({ filters, onFilterChange }) => {
                             <select
                                 value={filters.priority}
                                 onChange={(e) => onFilterChange('priority', e.target.value)}
-                                className="w-full px-5 py-4 rounded-2xl bg-white/50 backdrop-blur-sm border border-slate-200 text-sm font-semibold text-slate-700 appearance-none cursor-pointer outline-none focus:ring-4 focus:ring-accent/10 transition-all dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-200"
+                                className="input-premium appearance-none py-3"
                             >
                                 <option value="">All Priorities</option>
                                 {Object.entries(ISSUE_PRIORITY).map(([key, value]) => (

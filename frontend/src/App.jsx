@@ -8,6 +8,7 @@ import AuthPage from './features/auth/pages/AuthPage';
 import ResetPasswordPage from './features/auth/pages/ResetPasswordPage';
 import DashboardPage from './features/issues/pages/DashboardPage';
 import AdminDashboard from './features/admin/pages/AdminDashboard';
+import LandingPage from './features/landing/pages/LandingPage';
 
 const ProtectedRoute = ({ children, adminOnly = false, userOnly = false }) => {
     const { user, loading } = useAuth();
@@ -33,6 +34,7 @@ const DashboardRedirect = () => {
 const AppRoutes = () => {
     return (
         <Routes>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/reset-password/:resetToken" element={<ResetPasswordPage />} />
             <Route
@@ -51,8 +53,7 @@ const AppRoutes = () => {
                     </ProtectedRoute>
                 }
             />
-            <Route path="/" element={<DashboardRedirect />} />
-            <Route path="*" element={<DashboardRedirect />} />
+            <Route path="*" element={<Navigate to="/" />} />
         </Routes>
     );
 };

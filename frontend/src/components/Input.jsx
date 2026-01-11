@@ -12,7 +12,7 @@ const Input = ({ className, label, error, ...props }) => {
             )}
             <input
                 className={twMerge(
-                    'w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white/50 backdrop-blur-sm text-slate-900 focus:outline-none focus:ring-4 focus:ring-accent/10 transition-all dark:bg-slate-900/50 dark:border-slate-800 dark:text-white placeholder:text-slate-400',
+                    'input-premium',
                     error && 'border-red-400 focus:ring-red-100',
                     className
                 )}

@@ -16,14 +16,28 @@ const Navbar = () => {
 
     return (
         <nav className="sticky top-0 z-40 w-full glass border-b border-white/40 transition-all duration-500">
-            <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-6 sm:px-8 lg:px-10">
-                <div className="flex items-center">
-                    <div className="transform hover:scale-105 transition-all duration-300">
-                        <Logo size="12rem" />
-                    </div>
+            <div className="mx-auto flex h-24 max-w-7xl items-center justify-center px-6 sm:px-8 lg:px-10 relative">
+                {/* Home Link on the left */}
+                <div className="absolute left-6 sm:left-8 lg:left-10 flex items-center gap-4">
+                    <button
+                        onClick={() => navigate('/')}
+                        className="flex items-center gap-2 text-slate-600 hover:text-[#365314] font-bold text-sm transition-all hover:scale-105 active:scale-95"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+                        <span className="hidden md:inline">Home</span>
+                    </button>
                 </div>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center">
+                    <button
+                        onClick={() => navigate('/')}
+                        className="transform hover:scale-105 transition-all duration-300 active:scale-95"
+                    >
+                        <Logo size="12rem" />
+                    </button>
+                </div>
+
+                <div className="absolute right-6 sm:right-8 lg:right-10 flex items-center gap-6">
                     {user && (
                         <Menu as="div" className="relative ml-4">
                             <div>

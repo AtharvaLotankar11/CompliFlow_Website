@@ -11,8 +11,11 @@ import AdminCharts from '../components/AdminCharts';
 import Footer from '../../../components/Footer';
 import AIHelper from '../../../components/AIHelper';
 import { MagnifyingGlassIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { Home } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
+    const navigate = useNavigate();
     const { user } = useAuth();
     const queryClient = useQueryClient();
     const [filters, setFilters] = useState({ status: '', priority: '', search: '' });
@@ -81,7 +84,7 @@ const AdminDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 transition-colors duration-200 flex flex-col">
+        <div className="min-h-screen bg-[#F7FEE7] transition-colors duration-200 flex flex-col">
             <Navbar />
 
             <main className="flex-grow mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
@@ -163,6 +166,15 @@ const AdminDashboard = () => {
             </main>
 
             <Footer />
+            <div className="fixed bottom-8 right-8 z-50">
+                <button
+                    onClick={() => navigate('/')}
+                    className="p-4 bg-[#365314] text-white rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all group"
+                    title="Back to Home"
+                >
+                    <Home size={24} />
+                </button>
+            </div>
             <AIHelper />
         </div>
     );
